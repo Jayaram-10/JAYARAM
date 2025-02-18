@@ -1,0 +1,22 @@
+def simple_reflex_agent():
+    
+    rooms = ['A', 'B', 'C', 'D']
+    state = {room: 'dirty' for room in rooms}  
+
+    current_room = 'A'
+    while True:
+        
+        room_state = state[current_room]
+        print(f"Room {current_room} is {room_state}.")
+
+        if room_state == 'dirty':
+            print(f"Action: Clean room {current_room}")
+            state[current_room] = 'clean'  # Update room state to clean
+        else:
+            print(f"Action: Move to next room")
+            next_room_index = rooms.index(current_room) + 1
+            if next_room_index < len(rooms):
+                current_room = rooms[next_room_index]  # Move to the next room
+            else:
+                print("All rooms are clean!")
+                break
