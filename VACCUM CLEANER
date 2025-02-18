@@ -1,0 +1,34 @@
+class SimpleReflexCleanerAgent:
+    def __init__(self):  # Corrected the constructor name
+        self.rooms = {'A': 'D', 'B': 'D', 'C': 'D', 'D': 'D'} 
+        self.current_room = 'A' 
+
+    def clean(self):
+        """Clean the current room if dirty."""
+        if self.rooms[self.current_room] == 'D':
+            print(f"Cleaning room {self.current_room}")
+            self.rooms[self.current_room] = 'Clean'
+        else:
+            print(f"Room {self.current_room} is already clean.")
+
+    def move(self):
+        """Move to the next room in sequence."""
+        room_order = ['A', 'B', 'C', 'D']
+        current_index = room_order.index(self.current_room)
+        if current_index < len(room_order) - 1:
+            self.current_room = room_order[current_index + 1]
+            print(f"Moving to room {self.current_room}")
+        else:
+            print("No more rooms to move to.")
+
+    def run(self):
+        """Run the cleaning process until all rooms are clean."""
+        while 'D' in self.rooms.values():
+            self.clean()
+            if 'D' in self.rooms.values():
+                self.move()
+        print("All rooms are clean!")
+        print("Final Room States:", self.rooms)
+
+reflex_agent = SimpleReflexCleanerAgent()
+reflex_agent.run()
