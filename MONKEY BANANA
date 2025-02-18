@@ -1,0 +1,46 @@
+class MonkeyBananaProblem:
+    def __init__(self):
+        self.room = [
+            ["M", "-", "-"],  
+            ["-", "B", "-"],  
+            ["-", "-", "C"]
+        ]
+        self.positions = {"M": (1, 1), "B": (2, 2), "C": (3, 3)}  
+        self.has_banana = False
+
+    def print_room(self):
+        for row in self.room:
+            print(" ".join(row))
+        print()
+
+    def move(self, target, new_pos):
+        x, y = self.positions[target][0] - 1, self.positions[target][1] - 1
+        new_x, new_y = new_pos[0] - 1, new_pos[1] - 1
+        self.room[x][y], self.room[new_x][new_y] = "-", target
+        self.positions[target] = new_pos
+
+    def solve(self):
+        print("Initial Room State:")
+        self.print_room()
+
+        print("Monkey moves to the banana.")
+        self.move("M", self.positions["B"])
+        self.print_room()
+
+        print("Monkey moves to the chair.")
+        self.move("M", self.positions["C"])
+        self.print_room()
+
+        print("Monkey moves the chair under the banana.")
+        self.move("C", self.positions["B"])
+        self.print_room()
+
+        print("Monkey climbs the chair and grabs the banana.")
+        self.move("M", self.positions["B"])
+        self.has_banana = True
+
+        print("Final Room State:")
+        self.print_room()
+        print("Success! The monkey got the banana.")
+
+MonkeyBananaProblem().solve()
