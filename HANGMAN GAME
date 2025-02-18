@@ -1,0 +1,67 @@
+import random
+import re
+
+class HangmanAI:
+    def __init__(self, secret_word, word_list):
+        self.secret_word = secret_word.lower()
+        self.word_length = len(secret_word)
+        self.current_guess = ['_'] * self.word_length
+        self.word_list = [word.lower() for word in word_list if len(word) == self.word_length]
+        self.mistakes = 0
+        self.max_mistakes = 6  # Hangman has 6 body parts
+        self.hangman_stages = [
+            "\n  +---+\n      |\n      |\n      |\n     ===",
+            "\n  +---+\n  O   |\n      |\n      |\n     ===",
+            "\n  +---+\n  O   |\n  |   |\n      |\n     ===",
+            "\n  +---+\n  O   |\n /|   |\n      |\n     ===",
+            "\n  +---+\n  O   |\n /|\  |\n      |\n     ===",
+            "\n  +---+\n  O   |\n /|\  |\n /    |\n     ===",
+            "\n  +---+\n  O   |\n /|\  |\n / \  |\n     ==="
+        ]
+
+    def get_possible_words(self):
+        """Find words that match the current known letters."""
+        pattern = ''.join([c if c != '_' else '.' for c in self.current_guess])
+        return [word for word in self.word_list if re.fullmatch(pattern, word)]
+
+    def update_guess(self, letter, positions):
+        """Update the guessed word with new letter positions."""
+        for pos in positions:
+            self.current_guess[pos] = letter
+
+    def play(self, letter, positions):
+        """AI attempts to complete the word."""
+        if not positions:  # If AI guessed incorrectly
+            self.mistakes += 1
+        else:
+            self.update_guess(letter, positions)
+
+        print("\nCurrent Guess:", ' '.join(self.current_guess))
+        print(self.hangman_stages[self.mistakes])
+        print("Mistakes:", self.mistakes, "/", self.max_mistakes)
+
+        if '_' not in self.current_guess:
+            print("\n🎉 Player 2 Wins! The word is:", ''.join(self.current_guess))
+            return True
+        elif self.mistakes >= self.max_mistakes:
+            print("\n💀 Player 1 Wins! Hangman complete. The word was:", self.secret_word)
+            return True
+        return False
+
+# Example Game Simulation
+if __name__ == "__main__":
+    # Predefined word list
+    word_list = ["apple", "banana", "cherry", "grapes", "mango"]
+    secret_word = random.choice(word_list)
+    
+    game = HangmanAI(secret_word, word_list)
+
+    print("\nSecret Word Length:", game.word_length)
+    print("Player 1 issues letter clues. Player 2 must place them in the correct positions.")
+
+    while True:
+        letter = input("\nPlayer 1, enter a letter clue: ").lower()
+        positions = [i for i, l in enumerate(secret_word) if l == letter]
+
+        if game.play(letter, positions):
+            break
